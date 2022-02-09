@@ -1,5 +1,5 @@
 @ECHO OFF
-IF "%1"=="/?" ECHO Drag one or more files to the batch file and they become & ECHO the input for the ffmpeg command executed through the software. & GOTO EOF
+IF "%%1"=="/?" ECHO Drag one or more files to the batch file and they become & ECHO the input for the ffmpeg command executed through the software. & GOTO EOF
 CLS
 COLOR 1F
 :MENU
