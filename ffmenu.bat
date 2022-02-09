@@ -85,12 +85,12 @@ ECHO M - MAIN MENU
 ECHO E - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
-IF %M%==1 ffmpeg -i %* -vf scale=1920x1080:flags=lanczos %~n1_1080p.mp4
-IF %M%==2 ffmpeg -i %* -vf scale=1280x720:flags=lanczos %~n1_720p.mp4
-IF %M%==3 ffmpeg -i %* -vf scale=960x720:flags=lanczos %~n1_720.mp4
-IF %M%==4 ffmpeg -i %* -vf scale=640x480:flags=lanczos %~n1_640.mp4 
-IF %M%==5 ffmpeg -i %* -vf scale=480x360:flags=lanczos %~n1_360.mp4
-IF %M%==6 ffmpeg -i %* -vf scale=640x360:flags=lanczos %~n1_360p.mp4
+IF %M%==1 ffmpeg -i %* -vf scale=1920x1080:flags=lanczos %~n1_1080p%~x1
+IF %M%==2 ffmpeg -i %* -vf scale=1280x720:flags=lanczos %~n1_720p%~x1
+IF %M%==3 ffmpeg -i %* -vf scale=960x720:flags=lanczos %~n1_720%~x1
+IF %M%==4 ffmpeg -i %* -vf scale=640x480:flags=lanczos %~n1_640%~x1 
+IF %M%==5 ffmpeg -i %* -vf scale=480x360:flags=lanczos %~n1_360%~x1
+IF %M%==6 ffmpeg -i %* -vf scale=640x360:flags=lanczos %~n1_360p%~x1
 IF %M%==7 ffmpeg -i %* -vf "scale=(iw*sar)*max(720/(iw*sar)\,480/ih):ih*max(720/(iw*sar)\,480/ih), crop=720:480" -c:a copy "%~n1_CenterCrop%~x1"
 IF %M%==M GOTO MENU
 IF %M%==E GOTO EOF
