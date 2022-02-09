@@ -8,45 +8,37 @@ REM DATE /T
 REM TIME /T
 ECHO MAIN MENU
 ECHO.
-ECHO 1 - Extract Audio to Mp3
+ECHO 1 - Audio Conversions
 ECHO 2 - Extract All Frames to PNG
 ECHO 3 - Normalize Video Color
-ECHO 4 - Add Audio to File
-ECHO 5 - Combine Audio from Mp3
-ECHO 6 - Remove Audio from Mp4
-ECHO 7 - Add Audio from 2nd Mp4 to First
-ECHO 8 - Join all Mp4 in Directory
-ECHO 9 - Extract All Frames to JPG
-ECHO 10 - Create Mp4 from Frames
-ECHO 11 - JPEG Slideshow (4 second per image)
-ECHO 12 - Scaling Menu
-ECHO 15 - Crossfade
-ECHO 16 - Add Credits
-ECHO 17 - Bump Generator
-ECHO 18 - Deshake Video
-ECHO 19 - Stabilize Video
+ECHO 4 - Join all Mp4 in Directory
+ECHO 5 - Extract All Frames to JPG
+ECHO 6 - Create Mp4 from Frames (PNG)
+ECHO 7 - JPEG Slideshow (4 second per image)
+ECHO 8 - Scaling Menu
+ECHO 9 - Crossfade
+ECHO 10 - Add Credits
+ECHO 11 - Bump Generator
+ECHO 12 - Deshake Video
+ECHO 13 - Stabilize Video
 ECHO 14 - OPTIONS MENU
 ECHO E - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
-IF %M%==1 CALL EXTRACTAUDIO
+IF %M%==1 CALL AUDIOMENU
 IF %M%==2 CALL EXTRACTPNG
 IF %M%==3 CALL NORMAL
-IF %M%==4 CALL ADDAUDIO 
-IF %M%==5 CALL COMBINEAUDIO
-IF %M%==6 CALL REMOVEAUDIO
-IF %M%==7 CALL COMBINEMP4AUDIO
-IF %M%==8 CALL JOINALLMP4
-IF %M%==9 CALL EXRACTJPG
-IF %M%==10 CALL MP4SLIDESHOW
-IF %M%==11 CALL JPEGSLIDESHOW
-IF %M%==12 CALL SCALINGMENU
+IF %M%==4 CALL JOINALLMP4
+IF %M%==5 CALL EXRACTJPG
+IF %M%==6 CALL MP4SLIDESHOW
+IF %M%==7 CALL JPEGSLIDESHOW
+IF %M%==8 CALL SCALINGMENU
+IF %M%==9 CALL CROSSFADE 
+IF %M%==10 CALL ADDCREDITS
+IF %M%==11 CALL BUMPGEN
+IF %M%==12 CALL DESHAKE
+IF %M%==13 CALL STABILIZE
 IF %M%==14 CALL OPTIONSMENU
-IF %M%==15 CALL CROSSFADE 
-IF %M%==16 CALL ADDCREDITS
-IF %M%==17 CALL BUMPGEN
-IF %M%==18 CALL DESHAKE
-IF %M%==19 CALL STABILIZE
 IF %M%==E GOTO EOF
 GOTO MENU
 :AUDIOMENU
@@ -66,6 +58,7 @@ IF %M%==2 CALL ADDAUDIO
 IF %M%==3 CALL COMBINEAUDIO
 IF %M%==4 CALL REMOVEAUDIO
 IF %M%==5 CALL COMBINEMP4AUDIO
+GOTO MENU
 :OPTIONSMENU
 CLS
 ECHO OPTIONS MENU
