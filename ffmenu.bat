@@ -2,6 +2,7 @@
 IF "%%1"=="/?" ECHO Drag one or more files to the batch file and they become & ECHO the input for the ffmpeg command executed through the software. & GOTO EOF
 CLS
 COLOR 1F
+
 :MENU
 ECHO.
 REM DATE /T
@@ -43,6 +44,7 @@ IF %M%==14 CALL GIFMENU
 IF %M%==15 CALL OPTIONSMENU
 IF %M%==E GOTO EOF
 GOTO MENU
+
 :AUDIOMENU
 CLS
 ECHO AUDIO MENU
@@ -62,6 +64,7 @@ IF %M%==4 CALL REMOVEAUDIO
 IF %M%==5 CALL COMBINEMP4AUDIO
 IF %M%==E CALL EOF
 GOTO MENU
+
 :GIFMENU
 CLS
 ECHO ANIMATED GIFS MENU
@@ -79,6 +82,7 @@ IF %M%==3 CALL VID2GIFHIGH
 IF %M%==4 CALL GIF2FRAMES
 IF %M%==E CALL EOF
 GOTO MENU
+
 :OPTIONSMENU
 CLS
 ECHO OPTIONS MENU
@@ -101,6 +105,8 @@ IF %M%==5 CALL COLOR 06
 IF %M%==6 CALL COLOR 0A
 IF %M%==7 GOTO MENU
 IF %M%==E GOTO EOF
+GOTO MENU
+
 :SCALINGMENU
 ECHO SCALING MENU
 ECHO.
@@ -125,34 +131,45 @@ IF %M%==7 ffmpeg -i %* -vf "scale=(iw*sar)*max(720/(iw*sar)\,480/ih):ih*max(720/
 IF %M%==M GOTO MENU
 IF %M%==E GOTO EOF
 GOTO MENU
+
 :EXTRACTAUDIO
 ffmpeg -i %* %~n1_audio.mp3
+
 :EXTRACTPNG
 SET FOLDERNAME=%date:~10%%date:~4,2%%date:~7,2%%time:~0,2%%time:~3,2%
 MD %FOLDERNAME%
 FFMPEG -i %* %FOLDERNAME%\frame%%04d.png -hide_banner
+
 :EXTRACTJPG
 SET FOLDERNAME=%date:~10%%date:~4,2%%date:~7,2%%time:~0,2%%time:~3,2%
 MD %FOLDERNAME%
 FFMPEG -i %* %FOLDERNAME%\frame%%04d.jpg -hide_banner
+
 :NORMAL
 ffmpeg -i %* -vf "normalize=strength=1" %~n1_normalized.mp4 
+
 :ADDAUDIO
 ffmpeg -i %* -i audio.mp3 -map 0:0 -map 1:a -c:v copy -shortest %~n1_output.mp4
+
 :COMBINEAUDIO
 ffmpeg -i %* -i audio.mp3 -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -ac 2 -shortest %~n1_combined.mp4
+
 :REMOVEAUDIO
 ffmpeg -i %* -c:v copy -an %~n1_silent.mp4
+
 :COMBINEMP4AUDIO
 ffmpeg -i video.mp4 -i video2.mp4 -map 0:0 -map 1:1 -c:v copy -shortest %~n1_combined.mp4
+
 :JOINALLMP4
 (for %%i in (*.mp4) do @echo file '%%i') > mylist.txt
 ffmpeg -f concat -i mylist.txt -c copy %~n1_combined.mp4
 del /q mylist.txt
+
 :MP4SLIDESHOW
 ffmpeg -i %%* slideshow.mp4
 REM (for %%i in (slideshow\*.*) do @echo file '%%i') > mylist.txt
 REM ffmpeg -r 1/5 concat -i mylist.txt -c:v libx264 -vf fps=25 -pix_fmt yuv420p out.mp4
+
 :JPEGSLIDESHOW
 REM Create short format image list
 for %%a in (*.jpg) do (
@@ -163,6 +180,7 @@ ffmpeg.exe -r 0.25 -f concat -i images.txt -c:v libx264 -pix_fmt yuv420p -r 0.25
 del /q images.txt
 ffmpeg -i slideshow.mp4 -i audio.mp3 -map 0:0 -map 1:a -c:v copy -shortest slideshow_wmusic.mp4
 del /q slideshow.mp4
+
 :PNGSLIDESHOW
 REM Create short format image list
 for %%a in (*.png) do (
@@ -173,20 +191,26 @@ ffmpeg.exe -r 24 -f concat -i images.txt -c:v libx264 -pix_fmt yuv420p -r 24 sli
 del /q images.txt
 ffmpeg -i slideshow.mp4 -i audio.mp3 -map 0:0 -map 1:a -c:v copy -shortest slideshow_wmusic.mp4
 del /q slideshow.mp4
+
 :TESTPATTERN
 ffmpeg -f lavfi \ -i "testsrc=size=320x260[out0];aevalsrc=random(0)/20[out1]" \ -t 0:0:30 -pix_fmt yuv420p \ testpattern.mp4
+
 :COLORSOURCE
 ffmpeg -f lavfi -i color=c=darkblue:size=960x720:rate=30 -t 10 colorsource.mp4
 ffmpeg -i colorsource.mp4 -filter_complex "drawtext=testtesttest:x=main_w/2 - text_w/2:y=main_h/2 - text_h/2:fontfile=Roboto-Regular.ttf:fontsize=24:fontcolor=000000" colorsource2.mp4
+
 :MANDELBROT
 REM Generates a fractal animation. Default is long.
 ffmpeg -f lavfi -i mandelbrot mandelbrot.mp4
+
 :CROSSFADE
 REM Takes 2 videos and crossfades them. Videos should be 40 seconds, fade starts at 30.
 ffmpeg -i %1 -i %2 -filter_complex xfade=transition=fade:duration=10:offset=30 %~n1_crossfade.mp4
+
 :ADDCREDITS
 REM Add upward scrolling text to clip.
 ffmpeg -i %1 -vf "drawtext=textfile=credits.txt: x=100: y=h-20*t: fontsize=18:fontcolor=yellow@0.9: box=1: boxcolor=black@0.1" -c:a copy %~n1_credits.mp4
+
 :BUMPGEN
 REM x0 and x1 set the angle of the linear gradient.
 REM y0 appears to determine width of c0. y1 appears to be width of gradient effect.
@@ -194,26 +218,35 @@ ffmpeg -f lavfi -i "gradients=s=360x240: n=3: c0=darkblue: c1=darkorange: c2=dar
 ffmpeg -i output.mp4 -i music.mp3 -map 0:0 -map 1:a -c:v copy -shortest output2.mp4
 ffmpeg -i output2.mp4 -vf "drawbox=x=iw/10:y=ih/5:w=iw*0.8:h=ih*0.6:color=purple@0.5:t=fill" output3.mp4
 ffmpeg -i output3.mp4 -vf "drawtext=textfile=credits.txt: x=w/10: y=h-8*t: fontsize=12:fontcolor=yellow@0.9: box=1: boxcolor=darkblue@0.9" -c:a copy outputcredits.mp4
+
 :BUMPSCROLLER
 ffmpeg -f lavfi -i "gradients=s=360x240: n=3: c0=darkblue: c1=darkorange: c2=darkorange: r=30: d=30: x0=160: y0=0: x1=160: y1=240: speed=0.00001" output.mp4
 ffmpeg -i output.mp4 -i music.mp3 -map 0:0 -map 1:a -c:v copy -shortest output2.mp4
 ffmpeg -i output2.mp4 -vf "drawtext=textfile=credits.txt: x=w/10: y=h-8*t: fontsize=18:fontcolor=yellow@0.9: box=1: boxcolor=darkblue@0.5" -c:a copy outputcredits.mp4
+
 :ENABLETELNET
 pkgmgr /iu:"TelnetClient"
+
 :DESHAKE
 ffmpeg -i %* -vf deshake %~n1_deshake%~x1
+
 :STABILIZE
 ffmpeg -i %* -vf vidstabdetect -f null -
 ffmpeg -i %* -vf vidstabtransform,unsharp=5:5:0.8:3:3:0.4 %~n1_stabilized%~x1
+
 :GIF2VID
 REM movflags and faststart optimize for web, math and vf ensure MP4 compatibility.
 ffmpeg -i %* -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %~n1_video.mp4
+
 :VID2GIFFAST
 ffmpeg -ss 61.0 -t 2.5 -i %* -filter_complex "[0:v] fps=12,scale=480:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" %~n1_fast.gif
+
 :VID2GIFHIGH
 ffmpeg -ss 61.0 -t 2.5 -i %* -filter_complex "[0:v] fps=12,scale=w=480:h=-1,split [a][b];[a] palettegen=stats_mode=single [p];[b][p] paletteuse=new=1" %~n1_high.gif
+
 :GIF2FRAMES
 ffmpeg -i %* -vsync 0 temp%d.png
+
 :EOF
 EXIT
 REM ffmpeg -i "%*" -vf "vidstabtransform=smoothing=50:crop=keep:invert=0:relative=0:zoom=0:optzoom=2:zoomspeed=0.2:interpol=bilinear:tripod=0" -map 0 -c:v libx264 -preset fast -crf 9 -c:a aac -b:a 192k "%~n1-BetterDeshake%~x1"
