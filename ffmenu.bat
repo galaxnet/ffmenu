@@ -72,7 +72,7 @@ ECHO.
 ECHO 1 - Convert GIF to Mp4
 ECHO 2 - Convert Video to GIF (Fast)
 ECHO 3 - Convert Video to GIF (High Quality)
-ECHO 3 - Split GIF to Frames (PNG)
+ECHO 4 - Split GIF to Frames (PNG)
 ECHO e - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
