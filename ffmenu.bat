@@ -171,10 +171,17 @@ ffmpeg -i output2.mp4 -vf "drawtext=textfile=credits.txt: x=w/10: y=h-8*t: fonts
 :ENABLETELNET
 pkgmgr /iu:"TelnetClient"
 :DESHAKE
-ffmpeg -i %* -vf deshake %~n1-deshake%~x1
+ffmpeg -i %* -vf deshake %~n1_deshake%~x1
 :STABILIZE
 ffmpeg -i %* -vf vidstabdetect -f null -
 ffmpeg -i %* -vf vidstabtransform,unsharp=5:5:0.8:3:3:0.4 %~n1_stabilized%~x1
+:GIF2VID
+REM movflags and faststart optimize for web, math and vf ensure MP4 compatibility.
+ffmpeg -i %* -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %~n1_video.mp4
+:VID2GIFSHORT
+ffmpeg -ss 61.0 -t 2.5 -i %* -filter_complex "[0:v] fps=12,scale=480:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" %~n1_fast.gif
+:VID2GIFLONG
+ffmpeg -ss 61.0 -t 2.5 -i %* -filter_complex "[0:v] fps=12,scale=w=480:h=-1,split [a][b];[a] palettegen=stats_mode=single [p];[b][p] paletteuse=new=1" %~n1_high.gif
 :EOF
 EXIT
 REM ffmpeg -i "%*" -vf "vidstabtransform=smoothing=50:crop=keep:invert=0:relative=0:zoom=0:optzoom=2:zoomspeed=0.2:interpol=bilinear:tripod=0" -map 0 -c:v libx264 -preset fast -crf 9 -c:a aac -b:a 192k "%~n1-BetterDeshake%~x1"
