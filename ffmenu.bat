@@ -85,18 +85,18 @@ ECHO M - MAIN MENU
 ECHO E - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
-IF %M%==1 ffmpeg -i %* -vf scale=1920x1080:flags=lanczos output_1080p.mp4
-IF %M%==2 ffmpeg -i %* -vf scale=1280x720:flags=lanczos output_720p.mp4
-IF %M%==3 ffmpeg -i %* -vf scale=960x720:flags=lanczos output_720.mp4
-IF %M%==4 ffmpeg -i %* -vf scale=640x480:flags=lanczos output_640.mp4 
-IF %M%==5 ffmpeg -i %* -vf scale=480x360:flags=lanczos output_360.mp4
-IF %M%==6 ffmpeg -i %* -vf scale=640x360:flags=lanczos output_360p.mp4
-IF %M%==7 ffmpeg -i %* -vf "scale=(iw*sar)*max(720/(iw*sar)\,480/ih):ih*max(720/(iw*sar)\,480/ih), crop=720:480" -c:a copy "%~n1-CenterCrop%~x1" & GOTO SCALINGMENU
+IF %M%==1 ffmpeg -i %* -vf scale=1920x1080:flags=lanczos %~n1_1080p.mp4
+IF %M%==2 ffmpeg -i %* -vf scale=1280x720:flags=lanczos %~n1_720p.mp4
+IF %M%==3 ffmpeg -i %* -vf scale=960x720:flags=lanczos %~n1_720.mp4
+IF %M%==4 ffmpeg -i %* -vf scale=640x480:flags=lanczos %~n1_640.mp4 
+IF %M%==5 ffmpeg -i %* -vf scale=480x360:flags=lanczos %~n1_360.mp4
+IF %M%==6 ffmpeg -i %* -vf scale=640x360:flags=lanczos %~n1_360p.mp4
+IF %M%==7 ffmpeg -i %* -vf "scale=(iw*sar)*max(720/(iw*sar)\,480/ih):ih*max(720/(iw*sar)\,480/ih), crop=720:480" -c:a copy "%~n1_CenterCrop%~x1"
 IF %M%==M GOTO MENU
 IF %M%==E GOTO EOF
 GOTO MENU
 :EXTRACTAUDIO
-ffmpeg -i %* audio.mp3
+ffmpeg -i %* %~n1_audio.mp3
 :EXTRACTPNG
 SET FOLDERNAME=%date:~10%%date:~4,2%%date:~7,2%%time:~0,2%%time:~3,2%
 MD %FOLDERNAME%
@@ -106,18 +106,18 @@ SET FOLDERNAME=%date:~10%%date:~4,2%%date:~7,2%%time:~0,2%%time:~3,2%
 MD %FOLDERNAME%
 FFMPEG -i %* %FOLDERNAME%\frame%%04d.jpg -hide_banner
 :NORMAL
-ffmpeg -i %* -vf "normalize=strength=1" normalized.mp4 
+ffmpeg -i %* -vf "normalize=strength=1" %~n1_normalized.mp4 
 :ADDAUDIO
-ffmpeg -i %* -i audio.mp3 -map 0:0 -map 1:a -c:v copy -shortest output.mp4
+ffmpeg -i %* -i audio.mp3 -map 0:0 -map 1:a -c:v copy -shortest %~n1_output.mp4
 :COMBINEAUDIO
-ffmpeg -i %* -i audio.mp3 -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -ac 2 -shortest combined.mp4
+ffmpeg -i %* -i audio.mp3 -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -ac 2 -shortest %~n1_combined.mp4
 :REMOVEAUDIO
-ffmpeg -i %* -c:v copy -an output.mp4
+ffmpeg -i %* -c:v copy -an %~n1_silent.mp4
 :COMBINEMP4AUDIO
-ffmpeg -i video.mp4 -i video2.mp4 -map 0:0 -map 1:1 -c:v copy -shortest output.mp4
+ffmpeg -i video.mp4 -i video2.mp4 -map 0:0 -map 1:1 -c:v copy -shortest %~n1_combined.mp4
 :JOINALLMP4
 (for %%i in (*.mp4) do @echo file '%%i') > mylist.txt
-ffmpeg -f concat -i mylist.txt -c copy output.mp4
+ffmpeg -f concat -i mylist.txt -c copy %~n1_combined.mp4
 del /q mylist.txt
 :MP4SLIDESHOW
 ffmpeg -i %%* slideshow.mp4
@@ -152,11 +152,11 @@ ffmpeg -i colorsource.mp4 -filter_complex "drawtext=testtesttest:x=main_w/2 - te
 REM Generates a fractal animation. Default is long.
 ffmpeg -f lavfi -i mandelbrot mandelbrot.mp4
 :CROSSFADE
-REM Takes 2 videos dragged and crossfades them. Videos should be 40 seconds, fade starts at 30.
-ffmpeg -i %1 -i %2 -filter_complex xfade=transition=fade:duration=10:offset=30 crossfade.mp4
+REM Takes 2 videos and crossfades them. Videos should be 40 seconds, fade starts at 30.
+ffmpeg -i %1 -i %2 -filter_complex xfade=transition=fade:duration=10:offset=30 %~n1_crossfade.mp4
 :ADDCREDITS
 REM Add upward scrolling text to clip.
-ffmpeg -i %1 -vf "drawtext=textfile=credits.txt: x=100: y=h-20*t: fontsize=18:fontcolor=yellow@0.9: box=1: boxcolor=black@0.1" -c:a copy outputCredits.mp4
+ffmpeg -i %1 -vf "drawtext=textfile=credits.txt: x=100: y=h-20*t: fontsize=18:fontcolor=yellow@0.9: box=1: boxcolor=black@0.1" -c:a copy %~n1_credits.mp4
 :BUMPGEN
 REM x0 and x1 set the angle of the linear gradient.
 REM y0 appears to determine width of c0. y1 appears to be width of gradient effect.
