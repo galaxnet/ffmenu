@@ -197,7 +197,7 @@ ffmpeg -i output.mp4 -i music.mp3 -map 0:0 -map 1:a -c:v copy -shortest output2.
 ffmpeg -i output2.mp4 -vf "drawtext=textfile=credits.txt: x=w/10: y=h-8*t: fontsize=18:fontcolor=yellow@0.9: box=1: boxcolor=darkblue@0.5" -c:a copy outputcredits.mp4
 GOTO MENU
 :ENABLETELNET
-pkgmgr /iu:”TelnetClient”
+pkgmgr /iu:"TelnetClient"
 GOTO MENU
 :DESHAKE
 ffmpeg -i %* -vf deshake %~n1-deshake%~x1
