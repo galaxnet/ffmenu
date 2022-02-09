@@ -21,7 +21,8 @@ ECHO 10 - Add Credits
 ECHO 11 - Bump Generator
 ECHO 12 - Deshake Video
 ECHO 13 - Stabilize Video
-ECHO 14 - OPTIONS MENU
+ECHO 14 - GIF Conversions
+ECHO 15 - OPTIONS MENU
 ECHO E - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
@@ -38,7 +39,8 @@ IF %M%==10 CALL ADDCREDITS
 IF %M%==11 CALL BUMPGEN
 IF %M%==12 CALL DESHAKE
 IF %M%==13 CALL STABILIZE
-IF %M%==14 CALL OPTIONSMENU
+IF %M%==14 CALL GIFS
+IF %M%==15 CALL OPTIONSMENU
 IF %M%==E GOTO EOF
 GOTO MENU
 :AUDIOMENU
@@ -58,6 +60,24 @@ IF %M%==2 CALL ADDAUDIO
 IF %M%==3 CALL COMBINEAUDIO
 IF %M%==4 CALL REMOVEAUDIO
 IF %M%==5 CALL COMBINEMP4AUDIO
+IF %M%==E CALL EOF
+GOTO MENU
+:GIFS
+CLS
+ECHO ANIMATED GIFS MENU
+ECHO.
+ECHO 1 - Convert GIF to Mp4
+ECHO 2 - Convert Video to GIF (Fast)
+ECHO 3 - Convert Video to GIF (High Quality)
+ECHO 3 - Split GIF to Frames (PNG)
+ECHO E - EXIT
+ECHO.
+SET /P M=Type a number then press ENTER:
+IF %M%==1 CALL GIF2VID
+IF %M%==2 CALL VID2GIFFAST 
+IF %M%==3 CALL VID2GIFHIGH
+IF %M%==4 CALL GIF2FRAMES
+IF %M%==E CALL EOF
 GOTO MENU
 :OPTIONSMENU
 CLS
@@ -188,10 +208,12 @@ ffmpeg -i %* -vf vidstabtransform,unsharp=5:5:0.8:3:3:0.4 %~n1_stabilized%~x1
 :GIF2VID
 REM movflags and faststart optimize for web, math and vf ensure MP4 compatibility.
 ffmpeg -i %* -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %~n1_video.mp4
-:VID2GIFSHORT
+:VID2GIFFAST
 ffmpeg -ss 61.0 -t 2.5 -i %* -filter_complex "[0:v] fps=12,scale=480:-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" %~n1_fast.gif
-:VID2GIFLONG
+:VID2GIFHIGH
 ffmpeg -ss 61.0 -t 2.5 -i %* -filter_complex "[0:v] fps=12,scale=w=480:h=-1,split [a][b];[a] palettegen=stats_mode=single [p];[b][p] paletteuse=new=1" %~n1_high.gif
+:GIF2FRAMES
+ffmpeg -i %* -vsync 0 temp%d.png
 :EOF
 EXIT
 REM ffmpeg -i "%*" -vf "vidstabtransform=smoothing=50:crop=keep:invert=0:relative=0:zoom=0:optzoom=2:zoomspeed=0.2:interpol=bilinear:tripod=0" -map 0 -c:v libx264 -preset fast -crf 9 -c:a aac -b:a 192k "%~n1-BetterDeshake%~x1"
