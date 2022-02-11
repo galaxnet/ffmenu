@@ -12,12 +12,15 @@ ECHO   \/_/   \/_/   \/_/  \/_/\/_____/\/_/ \/_/\/_____/
 
 :MAINMENU
 ECHO 1 - Convert File
-ECHO 2 - Generate Content
-ECHO 3 - Install
+ECHO 2 - Play File
+ECHO 3 - Generate Content
+ECHO 4 - Install
+ECHO e - Exit
 SET /P M=Type a number then press ENTER:
 IF %M%==1 CLS & SET /P EXT=What file extension do you want?(PRESS ENTER) & FFmpeg -i %* %HOMEPATH%\downloads\%~n1_converted%EXT% & explorer %homepath%\downloads & GOTO EOF
-IF %M%==2 - CALL :MENU %*
-IF %M%==3 - CALL :INSTALL %*
+IF %M%==2 ffplay -i %*
+IF %M%==3 - CALL :MENU %*
+IF %M%==4 - CALL :INSTALL %*
 GOTO EOF
 
 :MENU
@@ -59,6 +62,14 @@ IF %M%==13 CALL :STABILIZE %*
 IF %M%==14 CALL :GIFMENU %*
 IF %M%==e GOTO EOF
 GOTO MENU
+
+:INSTALL
+COPY ffmpeg.exe %ProgramFiles%\FFmenu
+COPY ffplay.exe %ProgramFiles%\FFmenu
+COPY ffprobe.exe %ProgramFiles%\FFmenu
+COPY ffmenu.bat %ProgramFiles%\FFmenu
+ECHO CALL %ProgramFiles%\FFmenu\ffmenu %* > %HOMEPATH%\AppData\Roaming\Microsoft\Windows\SendTo\ffmenu_.bat
+GOTO :MAINMENU
 
 :AUDIOMENU
 CLS
@@ -232,10 +243,6 @@ EXIT /B 0
 ffmpeg -f lavfi -i "gradients=s=360x240: n=3: c0=darkblue: c1=darkorange: c2=darkorange: r=30: d=30: x0=160: y0=0: x1=160: y1=240: speed=0.00001" output.mp4
 ffmpeg -i output.mp4 -i music.mp3 -map 0:0 -map 1:a -c:v copy -shortest output2.mp4
 ffmpeg -i output2.mp4 -vf "drawtext=textfile=credits.txt: x=w/10: y=h-8*t: fontsize=18:fontcolor=yellow@0.9: box=1: boxcolor=darkblue@0.5" -c:a copy outputcredits.mp4
-EXIT /B 0
-
-:ENABLETELNET
-pkgmgr /iu:"TelnetClient"
 EXIT /B 0
 
 :DESHAKE
