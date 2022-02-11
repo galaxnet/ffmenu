@@ -11,7 +11,7 @@ ECHO 3 - Generate Content
 ECHO 4 - Install
 ECHO e - Exit
 SET /P M=Type a number then press ENTER:
-IF %M%==1 CLS & SET /P EXT=What file extension do you want?(PRESS ENTER) & FFmpeg -i %* %~n1_converted%EXT%
+IF %M%==1 CALL :CONVERT %*
 IF %M%==2 ffplay %*
 IF %M%==3 CALL :MENU %*
 IF %M%==4 CALL :INSTALL
@@ -56,6 +56,7 @@ IF %M%==e GOTO EOF
 GOTO MENU
 
 :INSTALL
+CALL :FLAIR
 MD c:\FFmenu
 COPY ffmpeg.exe c:\FFmenu
 COPY ffplay.exe c:\FFmenu
@@ -65,7 +66,7 @@ ECHO CALL c:\FFmenu\ffmenu %* > "%HOMEPATH%\AppData\Roaming\Microsoft\Windows\Se
 EXIT /B 0
 
 :AUDIOMENU
-CLS
+CALL :FLAIR
 ECHO AUDIO MENU
 ECHO.
 ECHO 1 - Extract Video Audio to Mp3
@@ -85,7 +86,7 @@ IF %M%==e GOTO EOF
 EXIT /B 0
 
 :GIFMENU
-CLS
+CALL :FLAIR
 ECHO ANIMATED GIFS MENU
 ECHO.
 ECHO 1 - Convert GIF to Mp4
@@ -103,6 +104,7 @@ IF %M%==e GOTO EOF
 EXIT /B 0
 
 :SCALINGMENU
+CALL :FLAIR
 ECHO SCALING MENU
 ECHO.
 ECHO 1 - Scale to 1080 (16:9)
@@ -125,6 +127,13 @@ IF %M%==6 ffmpeg -i %* -vf scale=640x360:flags=lanczos %~n1_360p%~x1
 IF %M%==7 ffmpeg -i %* -vf "scale=(iw*sar)*max(720/(iw*sar)\,480/ih):ih*max(720/(iw*sar)\,480/ih), crop=720:480" -c:a copy "%~n1_CenterCrop%~x1"
 IF %M%==m GOTO MENU
 IF %M%==e GOTO EOF
+EXIT /B 0
+
+:CONVERT
+CLS
+CALL :FLAIR
+SET /P EXT=What file extension do you want? (PRESS ENTER)
+FFmpeg -i %* "%~n1_converted.%EXT%"
 EXIT /B 0
 
 :EXTRACTAUDIO
