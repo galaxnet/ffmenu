@@ -35,6 +35,7 @@ ECHO 11 - Bump Generator
 ECHO 12 - Deshake Video
 ECHO 13 - Stabilize Video
 ECHO 14 - GIF Conversions
+ECHO 15 - Split to Scenes
 ECHO e - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
@@ -52,6 +53,7 @@ IF %M%==11 CALL :BUMPGEN %*
 IF %M%==12 CALL :DESHAKE %*
 IF %M%==13 CALL :STABILIZE %*
 IF %M%==14 CALL :GIFMENU %*
+IF %M%==15 CALL :SCENEDETECT %*
 IF %M%==e GOTO EOF
 GOTO MENU
 
@@ -259,6 +261,10 @@ EXIT /B 0
 :GIF2VID
 REM movflags and faststart optimize for web, math and vf ensure MP4 compatibility.
 ffmpeg -i %* -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %~n1_video.mp4
+EXIT /B 0
+
+:SCENEDETECT
+ffmpeg -y -i %* -vf yadif -c:v libx264 -profile:v high -preset:v fast -x264opts min-keyint=15:keyint=1000:scenecut=1 -b:v 2000k -c:a aac -b:a 128k -f segment -segment_format mp4 -segment_time 0.01 -segment_format_options movflags=faststart output%%05d.mp4
 EXIT /B 0
 
 :VID2GIFFAST
