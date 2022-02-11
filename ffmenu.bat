@@ -7,7 +7,7 @@ COLOR BD
 CALL :FLAIR
 ECHO 1 - Convert File
 ECHO 2 - Play File
-ECHO 3 - Generate Content
+ECHO 3 - Other Features
 ECHO 4 - Install
 ECHO e - Exit
 SET /P M=Type a number then press ENTER:
@@ -19,7 +19,7 @@ GOTO MAINMENU
 
 :MENU
 CALL :FLAIR
-ECHO MAIN MENU
+ECHO OTHER FEATURES
 ECHO.
 ECHO 1 - Audio Conversions
 ECHO 2 - Extract All Frames to PNG
