@@ -20,7 +20,7 @@ SET /P M=Type a number then press ENTER:
 IF %M%==1 CLS & SET /P EXT=What file extension do you want?(PRESS ENTER) & FFmpeg -i %* %HOMEPATH%\downloads\%~n1_converted%EXT% & explorer %homepath%\downloads & GOTO EOF
 IF %M%==2 ffplay -i %*
 IF %M%==3 - CALL :MENU %*
-IF %M%==4 - CALL :INSTALL %*
+IF %M%==4 - CALL :INSTALL
 GOTO EOF
 
 :MENU
@@ -64,11 +64,11 @@ IF %M%==e GOTO EOF
 GOTO MENU
 
 :INSTALL
-COPY ffmpeg.exe %ProgramFiles%\FFmenu
-COPY ffplay.exe %ProgramFiles%\FFmenu
-COPY ffprobe.exe %ProgramFiles%\FFmenu
-COPY ffmenu.bat %ProgramFiles%\FFmenu
-ECHO CALL %ProgramFiles%\FFmenu\ffmenu %* > %HOMEPATH%\AppData\Roaming\Microsoft\Windows\SendTo\ffmenu_.bat
+COPY ffmpeg.exe "%ProgramFiles%"\FFmenu
+COPY ffplay.exe "%ProgramFiles%"\FFmenu
+COPY ffprobe.exe "%ProgramFiles%"\FFmenu
+COPY ffmenu.bat "%ProgramFiles%"\FFmenu
+ECHO CALL "%ProgramFiles%"\FFmenu\ffmenu %* > "%HOMEPATH%"\AppData\Roaming\Microsoft\Windows\SendTo\ffmenu_.bat
 GOTO :MAINMENU
 
 :AUDIOMENU
