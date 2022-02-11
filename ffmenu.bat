@@ -1,7 +1,14 @@
 @ECHO OFF
 IF "%%1"=="/?" ECHO Drag one or more files to the batch file and they become & ECHO the input for the ffmpeg command executed through the software. & GOTO EOF
 CLS
-COLOR 1F
+COLOR BD
+
+:FLAIR
+ECHO  ______ ______ __    __  ______  __   __  __  __   
+ECHO /\  ___/\  ___/\ "-./  \/\  ___\/\ "-.\ \/\ \/\ \  
+ECHO \ \  __\ \  __\ \ \-./\ \ \  __\\ \ \-.  \ \ \_\ \ 
+ECHO  \ \_\  \ \_\  \ \_\ \ \_\ \_____\ \_\\"\_\ \_____\
+ECHO   \/_/   \/_/   \/_/  \/_/\/_____/\/_/ \/_/\/_____/
 
 :MAINMENU
 ECHO 1 - Convert File
