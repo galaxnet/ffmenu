@@ -3,6 +3,16 @@ IF "%%1"=="/?" ECHO Drag one or more files to the batch file and they become & E
 CLS
 COLOR 1F
 
+:MAINMENU
+ECHO 1 - Convert File
+ECHO 2 - Generate Content
+ECHO 3 - Install
+SET /P M=Type a number then press ENTER:
+IF %M%==1 CLS & SET /P EXT=What file extension do you want?(PRESS ENTER) & FFmpeg -i %* %HOMEPATH%\downloads\%~n1_converted%EXT% & explorer %homepath%\downloads & GOTO EOF
+IF %M%==2 - CALL :MENU %*
+IF %M%==3 - CALL :INSTALL %*
+GOTO EOF
+
 :MENU
 ECHO.
 REM DATE /T
