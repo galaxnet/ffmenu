@@ -23,7 +23,6 @@ ECHO 11 - Bump Generator
 ECHO 12 - Deshake Video
 ECHO 13 - Stabilize Video
 ECHO 14 - GIF Conversions
-ECHO 15 - OPTIONS MENU
 ECHO e - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
@@ -41,7 +40,6 @@ IF %M%==11 CALL :BUMPGEN %*
 IF %M%==12 CALL :DESHAKE %*
 IF %M%==13 CALL :STABILIZE %*
 IF %M%==14 CALL :GIFMENU %*
-IF %M%==15 CALL :OPTIONSMENU %*
 IF %M%==e GOTO EOF
 GOTO MENU
 
@@ -80,30 +78,6 @@ IF %M%==1 CALL :GIF2VID
 IF %M%==2 CALL :VID2GIFFAST %*
 IF %M%==3 CALL :VID2GIFHIGH %*
 IF %M%==4 CALL :GIF2FRAMES %*
-IF %M%==e GOTO EOF
-EXIT /B 0
-
-:OPTIONSMENU
-CLS
-ECHO OPTIONS MENU
-ECHO.
-ECHO 1 - BOWIE
-ECHO 2 - PRINCE
-ECHO 3 - DOOGIE
-ECHO 4 - NOIR
-ECHO 5 - GOLDSTEIN
-ECHO 6 - ZORK
-ECHO 7 - MAIN MENU
-ECHO e - EXIT
-ECHO.
-SET /P M=Type a number then press ENTER:
-IF %M%==1 CALL COLOR 4E
-IF %M%==2 CALL COLOR 5B
-IF %M%==3 CALL COLOR 1F
-IF %M%==4 CALL COLOR 8E
-IF %M%==5 CALL COLOR 06
-IF %M%==6 CALL COLOR 0A
-IF %M%==7 GOTO MENU
 IF %M%==e GOTO EOF
 EXIT /B 0
 
@@ -275,4 +249,3 @@ EXIT /B 0
 
 :EOF
 EXIT
-REM ffmpeg -i "%*" -vf "vidstabtransform=smoothing=50:crop=keep:invert=0:relative=0:zoom=0:optzoom=2:zoomspeed=0.2:interpol=bilinear:tripod=0" -map 0 -c:v libx264 -preset fast -crf 9 -c:a aac -b:a 192k "%~n1-BetterDeshake%~x1"
