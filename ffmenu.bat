@@ -3,30 +3,22 @@ IF "%%1"=="/?" ECHO Drag one or more files to the batch file and they become & E
 CLS
 COLOR BD
 
-:FLAIR
-ECHO  ______ ______ __    __  ______  __   __  __  __   
-ECHO /\  ___/\  ___/\ "-./  \/\  ___\/\ "-.\ \/\ \/\ \  
-ECHO \ \  __\ \  __\ \ \-./\ \ \  __\\ \ \-.  \ \ \_\ \ 
-ECHO  \ \_\  \ \_\  \ \_\ \ \_\ \_____\ \_\\"\_\ \_____\
-ECHO   \/_/   \/_/   \/_/  \/_/\/_____/\/_/ \/_/\/_____/
-
 :MAINMENU
+CALL :FLAIR
 ECHO 1 - Convert File
 ECHO 2 - Play File
 ECHO 3 - Generate Content
 ECHO 4 - Install
 ECHO e - Exit
 SET /P M=Type a number then press ENTER:
-IF %M%==1 CLS & SET /P EXT=What file extension do you want?(PRESS ENTER) & FFmpeg -i %* %HOMEPATH%\downloads\%~n1_converted%EXT% & explorer %homepath%\downloads & GOTO EOF
-IF %M%==2 ffplay -i %*
-IF %M%==3 - CALL :MENU %*
-IF %M%==4 - CALL :INSTALL
-GOTO EOF
+IF %M%==1 CLS & SET /P EXT=What file extension do you want?(PRESS ENTER) & FFmpeg -i %* %~n1_converted%EXT%
+IF %M%==2 ffplay %*
+IF %M%==3 CALL :MENU %*
+IF %M%==4 CALL :INSTALL
+GOTO MAINMENU
 
 :MENU
-ECHO.
-REM DATE /T
-REM TIME /T
+CALL :FLAIR
 ECHO MAIN MENU
 ECHO.
 ECHO 1 - Audio Conversions
@@ -70,7 +62,7 @@ COPY ffplay.exe c:\FFmenu
 COPY ffprobe.exe c:\FFmenu
 COPY ffmenu.bat c:\FFmenu
 ECHO CALL c:\FFmenu\ffmenu %* > "%HOMEPATH%\AppData\Roaming\Microsoft\Windows\SendTo\ffmenu_.bat"
-GOTO :MAINMENU
+EXIT /B 0
 
 :AUDIOMENU
 CLS
@@ -270,6 +262,15 @@ EXIT /B 0
 
 :GIF2FRAMES
 ffmpeg -i %* -vsync 0 temp%d.png
+EXIT /B 0
+
+:FLAIR
+ECHO  ______ ______ __    __  ______  __   __  __  __   
+ECHO /\  ___/\  ___/\ "-./  \/\  ___\/\ "-.\ \/\ \/\ \  
+ECHO \ \  __\ \  __\ \ \-./\ \ \  __\\ \ \-.  \ \ \_\ \ 
+ECHO  \ \_\  \ \_\  \ \_\ \ \_\ \_____\ \_\\"\_\ \_____\
+ECHO   \/_/   \/_/   \/_/  \/_/\/_____/\/_/ \/_/\/_____/
+ECHO.
 EXIT /B 0
 
 :EOF
