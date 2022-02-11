@@ -64,11 +64,12 @@ IF %M%==e GOTO EOF
 GOTO MENU
 
 :INSTALL
-COPY ffmpeg.exe "%ProgramFiles%"\FFmenu
-COPY ffplay.exe "%ProgramFiles%"\FFmenu
-COPY ffprobe.exe "%ProgramFiles%"\FFmenu
-COPY ffmenu.bat "%ProgramFiles%"\FFmenu
-ECHO CALL "%ProgramFiles%"\FFmenu\ffmenu %* > "%HOMEPATH%"\AppData\Roaming\Microsoft\Windows\SendTo\ffmenu_.bat
+MD c:\FFmenu
+COPY ffmpeg.exe c:\FFmenu
+COPY ffplay.exe c:\FFmenu
+COPY ffprobe.exe c:\FFmenu
+COPY ffmenu.bat c:\FFmenu
+ECHO CALL c:\FFmenu\ffmenu %* > "%HOMEPATH%\AppData\Roaming\Microsoft\Windows\SendTo\ffmenu_.bat"
 GOTO :MAINMENU
 
 :AUDIOMENU
