@@ -36,6 +36,8 @@ ECHO 12 - Deshake Video
 ECHO 13 - Stabilize Video
 ECHO 14 - GIF Conversions
 ECHO 15 - Split to Scenes
+ECHO 16 - Test LUTs on Video (from lut folder)
+ECHO 17 - Apply LUT to video
 ECHO e - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
@@ -54,6 +56,8 @@ IF %M%==12 CALL :DESHAKE %*
 IF %M%==13 CALL :STABILIZE %*
 IF %M%==14 CALL :GIFMENU %*
 IF %M%==15 CALL :SCENEDETECT %*
+IF %M%==16 CALL :TESTLUT %*
+IF %M%==17 CALL :APPLYLUT %*
 IF %M%==e GOTO EOF
 GOTO MENU
 
@@ -178,6 +182,24 @@ EXIT /B 0
 (for %%i in (*.mp4) do @echo file '%%i') > mylist.txt
 ffmpeg -f concat -i mylist.txt -c copy %~n1_combined.mp4
 del /q mylist.txt
+EXIT /B 0
+
+REM -- LUTs --
+:TESTLUT
+REM LUTs as .CUBES stored in LUT subdirectory
+mkdir out
+REM del "out\*.jpg"
+for %%f in (lut/*.CUBE) do (
+echo Processing %%~nf
+ffmpeg -ss 15 -v error -hide_banner -y -i %* -vf lut3d="lut/%%~nxf" -frames:v 1 "out/%%~nf_1.jpg"
+rem Uncomment for additional frame
+rem ffmpeg -sseof -10 -v error -hide_banner -y -i in.mp4 -vf lut3d = "lut/%%~nxf" -frames:v 1 "out/%%~nf_2.jpg"
+)
+EXIT /B 0
+
+:APPLYLUT
+REM Change "medium" to slow, slower, or veryslow for higher quality video
+ffmpeg -i %* -vf lut3d=file="lut/Fusion 88.cube",hqdn3d=6,unsharp=5:5:0.5:7:7:0.5,scale=1920x1080:flags=lanczos -c:a copy -c:v libx264 -crf 22 -preset medium out.mp4
 EXIT /B 0
 
 :MP4SLIDESHOW
