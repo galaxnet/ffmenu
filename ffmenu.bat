@@ -149,9 +149,9 @@ ffmpeg -i %* %~n1_audio.mp3
 EXIT /B 0
 
 :EXTRACTPNG
-SET FOLDERNAME=%date:~10%%date:~4,2%%date:~7,2%%time:~0,2%%time:~3,2%
-MD %FOLDERNAME%
-FFMPEG -i %* %FOLDERNAME%\frame%%04d.png -hide_banner
+SET FOLDERNAME="%date:~10%%date:~4,2%%date:~7,2%%time:~0,2%%time:~3,2%"
+MD "%FOLDERNAME%"
+FFMPEG -i %* "%FOLDERNAME%\frame%%04d.png" -hide_banner
 EXIT /B 0
 
 :EXTRACTJPG
