@@ -21,7 +21,7 @@ GOTO MAINMENU
 CALL :FLAIR
 ECHO OTHER FEATURES
 ECHO.
-ECHO 1 - Audio Conversions
+ECHO 1 - Audio Editing & Conversions
 ECHO 2 - Extract All Frames to PNG
 ECHO 3 - Normalize Video Color
 ECHO 4 - Join all Mp4 in Directory
@@ -80,6 +80,7 @@ ECHO 2 - Convert Audio File to Mp4
 ECHO 3 - Combine Audio from Mp3
 ECHO 4 - Remove Audio from Mp4
 ECHO 5 - Add Audio from 2nd Mp4 to First
+ECHO 6 - Normalize Audio (without video reencode)
 ECHO e - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
@@ -88,6 +89,7 @@ IF %M%==2 CALL :ADDAUDIO %*
 IF %M%==3 CALL :COMBINEAUDIO %*
 IF %M%==4 CALL :REMOVEAUDIO %*
 IF %M%==5 CALL :COMBINEMP4AUDIO %*
+IF %M%==6 CALL :NORMALIZEAUDIO
 IF %M%==e GOTO EOF
 EXIT /B 0
 
@@ -219,6 +221,11 @@ del /q images.txt
 ffmpeg -i slideshow.mp4 -i audio.mp3 -map 0:0 -map 1:a -c:v copy -shortest slideshow_wmusic.mp4
 del /q slideshow.mp4
 EXIT /B 0
+
+:NORMALIZEAUDIO
+REM Normalize audio, without vide re-encode.
+ffmpeg -y -i %* -c:v copy -pass 1 -c:a aac -b:a 256k -f mp4 null
+ffmpeg -i %* -c:v copy -pass 2 -c:a aac -b:a 256k %~n1_loudnorm.mp4
 
 :PNGSLIDESHOW
 REM Create short format image list
