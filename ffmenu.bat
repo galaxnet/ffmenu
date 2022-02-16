@@ -21,7 +21,7 @@ GOTO MAINMENU
 CALL :FLAIR
 ECHO OTHER FEATURES
 ECHO.
-ECHO 1 - Audio Editing & Conversions
+ECHO 1 - Audio Editing and Conversions
 ECHO 2 - Extract All Frames to PNG
 ECHO 3 - Normalize Video Color
 ECHO 4 - Join all Mp4 in Directory
