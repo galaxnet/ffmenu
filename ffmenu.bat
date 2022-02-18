@@ -38,6 +38,7 @@ ECHO 14 - GIF Conversions
 ECHO 15 - Split to Scenes
 ECHO 16 - Test LUTs on Video (from lut folder)
 ECHO 17 - Apply LUT to video
+ECHO 18 - Preview LUTs on Photo
 ECHO e - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
@@ -58,6 +59,7 @@ IF %M%==14 CALL :GIFMENU %*
 IF %M%==15 CALL :SCENEDETECT %*
 IF %M%==16 CALL :TESTLUT %*
 IF %M%==17 CALL :APPLYLUT %*
+IF %M%==18 CALL :TESTLUTPHOTO %*
 IF %M%==e GOTO EOF
 GOTO MENU
 
@@ -202,6 +204,15 @@ EXIT /B 0
 :APPLYLUT
 REM Change "medium" to slow, slower, or veryslow for higher quality video
 ffmpeg -i %* -vf lut3d=file="lut/Fusion 88.cube",hqdn3d=6,unsharp=5:5:0.5:7:7:0.5,scale=1920x1080:flags=lanczos -c:a copy -c:v libx264 -crf 22 -preset medium out.mp4
+EXIT /B 0
+
+:TESTLUTPHOTO
+REM LUTs as .CUBES stored in LUT subdirectory
+mkdir out
+for %%f in (lut/*.CUBE) do (
+echo Processing %%~nf
+ffmpeg -hide_banner -y -i %* -vf lut3d="lut/%%~nxf",scale=640x360:flags=lanczos,drawtext=text="%%~nf":x=w*0.75:y=h*0.9:fontsize=18:fontcolor=yellow@1 "out/%%~nf_1.png"
+)
 EXIT /B 0
 
 :MP4SLIDESHOW
