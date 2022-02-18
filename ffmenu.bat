@@ -83,6 +83,7 @@ ECHO 3 - Combine Audio from Mp3
 ECHO 4 - Remove Audio from Mp4
 ECHO 5 - Add Audio from 2nd Mp4 to First
 ECHO 6 - Normalize Audio (without video reencode)
+ECHO 7 - Convert MP3 to Vaporwave
 ECHO e - EXIT
 ECHO.
 SET /P M=Type a number then press ENTER:
@@ -91,7 +92,8 @@ IF %M%==2 CALL :ADDAUDIO %*
 IF %M%==3 CALL :COMBINEAUDIO %*
 IF %M%==4 CALL :REMOVEAUDIO %*
 IF %M%==5 CALL :COMBINEMP4AUDIO %*
-IF %M%==6 CALL :NORMALIZEAUDIO
+IF %M%==6 CALL :NORMALIZEAUDIO %*
+IF %M%==7 CALL :VAPORWAVE %*
 IF %M%==e GOTO EOF
 EXIT /B 0
 
@@ -305,6 +307,14 @@ EXIT /B 0
 
 :SCENEDETECT
 ffmpeg -y -i %* -vf yadif -c:v libx264 -profile:v high -preset:v fast -x264opts min-keyint=15:keyint=1000:scenecut=1 -b:v 2000k -c:a aac -b:a 128k -f segment -segment_format mp4 -segment_time 0.01 -segment_format_options movflags=faststart output%%05d.mp4
+EXIT /B 0
+
+:VAPORWAVE
+ffmpeg -i %* -af atempo=0.75 tempo.mp3
+ffmpeg -i tempo.mp3 -af chorus=0.7:0.9:55:0.4:0.25:2 chorus.mp3
+ffmpeg -i chorus.mp3 -af aecho=0.8:0.88:60:0.4 %~n1_vapor.mp3
+del /q tempo.mp3
+del /q chorus.mp3
 EXIT /B 0
 
 :VID2GIFFAST
