@@ -312,7 +312,7 @@ EXIT /B 0
 :VAPORWAVE
 ffmpeg -i %* -af atempo=0.75 tempo.mp3
 ffmpeg -i tempo.mp3 -af chorus=0.7:0.9:55:0.4:0.25:2 chorus.mp3
-ffmpeg -i chorus.mp3 -af aecho=0.8:0.88:60:0.4 %~n1_vapor.mp3
+ffmpeg -i chorus.mp3 -af aecho=0.8:0.88:60:0.4 "%~n1_vapor.mp3"
 del /q tempo.mp3
 del /q chorus.mp3
 EXIT /B 0
