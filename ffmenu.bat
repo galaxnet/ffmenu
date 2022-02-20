@@ -10,11 +10,11 @@ ECHO 2 - Play File
 ECHO 3 - Other Features
 ECHO 4 - Install
 ECHO e - Exit
-SET /P M=Type a number then press ENTER:
-IF %M%==1 CALL :CONVERT %*
-IF %M%==2 ffplay %*
-IF %M%==3 CALL :MENU %*
-IF %M%==4 CALL :INSTALL
+SET /P M1=Type a number then press ENTER:
+IF %M1%==1 CALL :CONVERT %*
+IF %M1%==2 ffplay %*
+IF %M1%==3 CALL :MENU %*
+IF %M1%==4 CALL :INSTALL
 GOTO MAINMENU
 
 :MENU
@@ -41,26 +41,26 @@ ECHO 17 - Apply LUT to video
 ECHO 18 - Preview LUTs on Photo
 ECHO e - EXIT
 ECHO.
-SET /P M=Type a number then press ENTER:
-IF %M%==1 CALL :AUDIOMENU %*
-IF %M%==2 CALL :EXTRACTPNG %*
-IF %M%==3 CALL :NORMAL %*
-IF %M%==4 CALL :JOINALLMP4 %*
-IF %M%==5 CALL :EXRACTJPG %*
-IF %M%==6 CALL :MP4SLIDESHOW %*
-IF %M%==7 CALL :JPEGSLIDESHOW %*
-IF %M%==8 CALL :SCALINGMENU %*
-IF %M%==9 CALL :CROSSFADE %*
-IF %M%==10 CALL :ADDCREDITS %*
-IF %M%==11 CALL :BUMPGEN %*
-IF %M%==12 CALL :DESHAKE %*
-IF %M%==13 CALL :STABILIZE %*
-IF %M%==14 CALL :GIFMENU %*
-IF %M%==15 CALL :SCENEDETECT %*
-IF %M%==16 CALL :TESTLUT %*
-IF %M%==17 CALL :APPLYLUT %*
-IF %M%==18 CALL :TESTLUTPHOTO %*
-IF %M%==e GOTO EOF
+SET /P M2=Type a number then press ENTER:
+IF %M2%==1 CALL :AUDIOMENU %*
+IF %M2%==2 CALL :EXTRACTPNG %*
+IF %M2%==3 CALL :NORMAL %*
+IF %M2%==4 CALL :JOINALLMP4 %*
+IF %M2%==5 CALL :EXRACTJPG %*
+IF %M2%==6 CALL :MP4SLIDESHOW %*
+IF %M2%==7 CALL :JPEGSLIDESHOW %*
+IF %M2%==8 CALL :SCALINGMENU %*
+IF %M2%==9 CALL :CROSSFADE %*
+IF %M2%==10 CALL :ADDCREDITS %*
+IF %M2%==11 CALL :BUMPGEN %*
+IF %M2%==12 CALL :DESHAKE %*
+IF %M2%==13 CALL :STABILIZE %*
+IF %M2%==14 CALL :GIFMENU %*
+IF %M2%==15 CALL :SCENEDETECT %*
+IF %M2%==16 CALL :TESTLUT %*
+IF %M2%==17 CALL :APPLYLUT %*
+IF %M2%==18 CALL :TESTLUTPHOTO %*
+IF %M2%==e GOTO EOF
 GOTO MENU
 
 :INSTALL
@@ -86,15 +86,15 @@ ECHO 6 - Normalize Audio (without video reencode)
 ECHO 7 - Convert MP3 to Vaporwave
 ECHO e - EXIT
 ECHO.
-SET /P M=Type a number then press ENTER:
-IF %M%==1 CALL :EXTRACTAUDIO %*
-IF %M%==2 CALL :ADDAUDIO %*
-IF %M%==3 CALL :COMBINEAUDIO %*
-IF %M%==4 CALL :REMOVEAUDIO %*
-IF %M%==5 CALL :COMBINEMP4AUDIO %*
-IF %M%==6 CALL :NORMALIZEAUDIO %*
-IF %M%==7 CALL :VAPORWAVE %*
-IF %M%==e GOTO EOF
+SET /P M3=Type a number then press ENTER:
+IF %M3%==1 CALL :EXTRACTAUDIO %*
+IF %M3%==2 CALL :ADDAUDIO %*
+IF %M3%==3 CALL :COMBINEAUDIO %*
+IF %M3%==4 CALL :REMOVEAUDIO %*
+IF %M3%==5 CALL :COMBINEMP4AUDIO %*
+IF %M3%==6 CALL :NORMALIZEAUDIO %*
+IF %M3%==7 CALL :VAPORWAVE %*
+IF %M3%==e GOTO EOF
 EXIT /B 0
 
 :GIFMENU
@@ -107,12 +107,12 @@ ECHO 3 - Convert Video to GIF (High Quality)
 ECHO 4 - Split GIF to Frames (PNG)
 ECHO e - EXIT
 ECHO.
-SET /P M=Type a number then press ENTER:
-IF %M%==1 CALL :GIF2VID
-IF %M%==2 CALL :VID2GIFFAST %*
-IF %M%==3 CALL :VID2GIFHIGH %*
-IF %M%==4 CALL :GIF2FRAMES %*
-IF %M%==e GOTO EOF
+SET /P M4=Type a number then press ENTER:
+IF %M4%==1 CALL :GIF2VID
+IF %M4%==2 CALL :VID2GIFFAST %*
+IF %M4%==3 CALL :VID2GIFHIGH %*
+IF %M4%==4 CALL :GIF2FRAMES %*
+IF %M4%==e GOTO EOF
 EXIT /B 0
 
 :SCALINGMENU
@@ -129,16 +129,16 @@ ECHO 7 - Scale to 720 + Center Crop
 ECHO m - MAIN MENU
 ECHO e - EXIT
 ECHO.
-SET /P M=Type a number then press ENTER:
-IF %M%==1 ffmpeg -i %* -vf scale=1920x1080:flags=lanczos %~n1_1080p%~x1
-IF %M%==2 ffmpeg -i %* -vf scale=1280x720:flags=lanczos %~n1_720p%~x1
-IF %M%==3 ffmpeg -i %* -vf scale=960x720:flags=lanczos %~n1_720%~x1
-IF %M%==4 ffmpeg -i %* -vf scale=640x480:flags=lanczos %~n1_640%~x1 
-IF %M%==5 ffmpeg -i %* -vf scale=480x360:flags=lanczos %~n1_360%~x1
-IF %M%==6 ffmpeg -i %* -vf scale=640x360:flags=lanczos %~n1_360p%~x1
-IF %M%==7 ffmpeg -i %* -vf "scale=(iw*sar)*max(720/(iw*sar)\,480/ih):ih*max(720/(iw*sar)\,480/ih), crop=720:480" -c:a copy "%~n1_CenterCrop%~x1"
-IF %M%==m GOTO MENU
-IF %M%==e GOTO EOF
+SET /P M5=Type a number then press ENTER:
+IF %M5%==1 ffmpeg -i %* -vf scale=1920x1080:flags=lanczos %~n1_1080p%~x1
+IF %M5%==2 ffmpeg -i %* -vf scale=1280x720:flags=lanczos %~n1_720p%~x1
+IF %M5%==3 ffmpeg -i %* -vf scale=960x720:flags=lanczos %~n1_720%~x1
+IF %M5%==4 ffmpeg -i %* -vf scale=640x480:flags=lanczos %~n1_640%~x1 
+IF %M5%==5 ffmpeg -i %* -vf scale=480x360:flags=lanczos %~n1_360%~x1
+IF %M5%==6 ffmpeg -i %* -vf scale=640x360:flags=lanczos %~n1_360p%~x1
+IF %M5%==7 ffmpeg -i %* -vf "scale=(iw*sar)*max(720/(iw*sar)\,480/ih):ih*max(720/(iw*sar)\,480/ih), crop=720:480" -c:a copy "%~n1_CenterCrop%~x1"
+IF %M5%==m GOTO MENU
+IF %M5%==e GOTO EOF
 EXIT /B 0
 
 :CONVERT
