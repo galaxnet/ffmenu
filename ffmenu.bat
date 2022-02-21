@@ -22,7 +22,7 @@ CALL :FLAIR
 ECHO OTHER FEATURES
 ECHO.
 ECHO 1 - Audio Editing and Conversions
-ECHO 2 - Extract All Frames to PNG
+ECHO 2 - Photo Editor
 ECHO 3 - Normalize Video Color
 ECHO 4 - Join all Mp4 in Directory
 ECHO 5 - Extract All Frames to JPG
@@ -38,12 +38,12 @@ ECHO 14 - GIF Conversions
 ECHO 15 - Split to Scenes
 ECHO 16 - Test LUTs on Video (from lut folder)
 ECHO 17 - Apply LUT to video
-ECHO 18 - Preview LUTs on Photo
+ECHO 18 - Extract All Frames to PNG
 ECHO e - EXIT
 ECHO.
 SET /P M2=Type a number then press ENTER:
 IF %M2%==1 CALL :AUDIOMENU %*
-IF %M2%==2 CALL :EXTRACTPNG %*
+IF %M2%==2 CALL :PHOTOEDIT %*
 IF %M2%==3 CALL :NORMAL %*
 IF %M2%==4 CALL :JOINALLMP4 %*
 IF %M2%==5 CALL :EXRACTJPG %*
@@ -59,7 +59,7 @@ IF %M2%==14 CALL :GIFMENU %*
 IF %M2%==15 CALL :SCENEDETECT %*
 IF %M2%==16 CALL :TESTLUT %*
 IF %M2%==17 CALL :APPLYLUT %*
-IF %M2%==18 CALL :TESTLUTPHOTO %*
+IF %M2%==18 CALL :EXTRACTPNG %*
 IF %M2%==e GOTO EOF
 GOTO MENU
 
@@ -95,6 +95,13 @@ IF %M3%==5 CALL :COMBINEMP4AUDIO %*
 IF %M3%==6 CALL :NORMALIZEAUDIO %*
 IF %M3%==7 CALL :VAPORWAVE %*
 IF %M3%==e GOTO EOF
+EXIT /B 0
+
+:PHOTOEDIT
+ECHO 1 - Preview LUTs on Photo
+ECHO.
+SET /P MP=Type a number then press ENTER:
+IF %MP%==1 CALL :TESTLUTPHOTO %*
 EXIT /B 0
 
 :GIFMENU
