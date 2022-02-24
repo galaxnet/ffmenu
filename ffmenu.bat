@@ -213,7 +213,7 @@ EXIT /B 0
 :APPLYLUT
 REM Change "medium" to slow, slower, or veryslow for higher quality video
 SET /P LUT=Type the name of the LUT the press ENTER (no extension):
-ffmpeg -i %* -vf lut3d=file="lut/%LUT%.CUBE",hqdn3d=6,unsharp=5:5:0.5:7:7:0.5,scale=1920x1080:flags=lanczos -c:a copy -c:v libx264 -crf 22 -preset medium out.mp4
+ffmpeg -i %* -vf hqdn3d=6,unsharp=5:5:0.5:7:7:0.5,scale=1920x1080:flags=lanczos,lut3d=file="lut/%LUT%.CUBE" -c:a copy -c:v libx264 -crf 22 -preset medium "%~n1_%LUT%.mp4"
 EXIT /B 0
 
 :TESTLUTPHOTO
