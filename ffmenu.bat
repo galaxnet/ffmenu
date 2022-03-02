@@ -101,11 +101,13 @@ EXIT /B 0
 ECHO 1 - Preview LUTs on Photo
 ECHO 2 - Denoise Photo
 ECHO 3 - Add Grain to Photo
+ECHO 4 - Curves Presets (vintage, etc.)
 ECHO.
 SET /P MP=Type a number then press ENTER:
 IF %MP%==1 CALL :TESTLUTPHOTO %*
 IF %MP%==2 CALL :PHOTODENOISE %*
 IF %MP%==3 CALL :PHOTOADDNOISE %*
+IF %MP%==4 CALL :PHOTOCURVES %*
 EXIT /B 0
 
 
@@ -234,6 +236,15 @@ EXIT /B 0
 REM Add noise with noise filter
 SET /P GRAIN=How much grain to add?(1-200)
 ffmpeg -hide_banner -i %* -vf noise=alls=20:allf=t+u -q:v 4 "%~n1_NOISE.%~x1"
+EXIT /B 0
+
+:PHOTOCURVES
+REM Denoise photos with hqdn3d
+CLS
+ECHO Presets: color_negative, cross_process, darker, lighter, negative, vintage
+ECHO increase_contrast, linear_contrast, medium_contrast, strong_contrast
+SET /P CURVEPRESET=Which preset?
+ffmpeg -hide_banner -i %* -vf curves=%CURVEPRESET% -q:v 2 "%~n1_VINTAGE.%~x1"
 EXIT /B 0
 
 :PHOTODENOISE
