@@ -99,10 +99,15 @@ EXIT /B 0
 
 :PHOTOEDIT
 ECHO 1 - Preview LUTs on Photo
+ECHO 2 - Denoise Photo
+ECHO 3 - Add Grain to Photo
 ECHO.
 SET /P MP=Type a number then press ENTER:
 IF %MP%==1 CALL :TESTLUTPHOTO %*
+IF %MP%==2 CALL :PHOTODENOISE %*
+IF %MP%==3 CALL :PHOTOADDNOISE %*
 EXIT /B 0
+
 
 :GIFMENU
 CALL :FLAIR
@@ -223,6 +228,18 @@ for %%f in (lut/*.CUBE) do (
 echo Processing %%~nf
 ffmpeg -hide_banner -y -i %* -vf lut3d="lut/%%~nxf",scale=640x360:flags=lanczos,drawtext=text="%%~nf":x=w*0.75:y=h*0.9:fontsize=18:fontcolor=yellow@1 "out/%%~nf_1.png"
 )
+EXIT /B 0
+
+:PHOTOADDNOISE
+REM Add noise with noise filter
+SET /P GRAIN=How much grain to add?(1-200)
+ffmpeg -hide_banner -i %* -vf noise=alls=20:allf=t+u -q:v 4 "%~n1_NOISE.%~x1"
+EXIT /B 0
+
+:PHOTODENOISE
+REM Denoise photos with hqdn3d
+SET /P DEN=How much denoise?(1-200)
+ffmpeg -hide_banner -i %* -vf hqdn3d=%DEN% -q:v 1 "%~n1_DENOISE.%~x1"
 EXIT /B 0
 
 :MP4SLIDESHOW
