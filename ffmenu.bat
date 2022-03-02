@@ -244,7 +244,7 @@ CLS
 ECHO Presets: color_negative, cross_process, darker, lighter, negative, vintage
 ECHO increase_contrast, linear_contrast, medium_contrast, strong_contrast
 SET /P CURVEPRESET=Which preset?
-ffmpeg -hide_banner -i %* -vf curves=%CURVEPRESET% -q:v 2 "%~n1_VINTAGE.%~x1"
+ffmpeg -hide_banner -i %* -vf curves=%CURVEPRESET% -q:v 2 "%~n1_%CURVEPRESET%%~x1"
 EXIT /B 0
 
 :PHOTODENOISE
