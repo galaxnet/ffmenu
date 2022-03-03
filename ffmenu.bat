@@ -235,7 +235,7 @@ EXIT /B 0
 :PHOTOADDNOISE
 REM Add noise with noise filter
 SET /P GRAIN=How much grain to add?(1-200)
-ffmpeg -hide_banner -i %* -vf noise=alls=20:allf=t+u -q:v 4 "%~n1_NOISE.%~x1"
+ffmpeg -hide_banner -i %* -vf noise=alls=20:allf=t+u -q:v 4 "%~n1_NOISE%~x1"
 EXIT /B 0
 
 :PHOTOCURVES
@@ -250,7 +250,7 @@ EXIT /B 0
 :PHOTODENOISE
 REM Denoise photos with hqdn3d
 SET /P DEN=How much denoise?(1-200)
-ffmpeg -hide_banner -i %* -vf hqdn3d=%DEN% -q:v 1 "%~n1_DENOISE.%~x1"
+ffmpeg -hide_banner -i %* -vf hqdn3d=%DEN% -q:v 1 "%~n1_DENOISE%~x1"
 EXIT /B 0
 
 :MP4SLIDESHOW
