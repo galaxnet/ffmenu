@@ -40,6 +40,7 @@ ECHO 16 - Test LUTs on Video (from lut folder)
 ECHO 17 - Apply LUT to video
 ECHO 18 - Extract All Frames to PNG
 ECHO 19 - Burn Subtitles
+ECHO 20 - ZoomPan > Image
 ECHO e - EXIT
 ECHO.
 SET /P M2=Type a number then press ENTER:
@@ -62,6 +63,7 @@ IF %M2%==16 CALL :TESTLUT %*
 IF %M2%==17 CALL :APPLYLUT %*
 IF %M2%==18 CALL :EXTRACTPNG %*
 IF %M2%==19 CALL :SUBTITLEBURN %*
+IF %M2%==20 CALL :ZOOMPANIMG %*
 IF %M2%==e GOTO EOF
 GOTO MENU
 
@@ -392,6 +394,11 @@ EXIT /B 0
 
 :GIF2FRAMES
 ffmpeg -i %* -vsync 0 temp%d.png
+EXIT /B 0
+
+:ZOOMPANIMG
+REM SET /P ZOOM=Zoom percentage (Press Enter)?
+ffmpeg -i %* -filter_complex zoompan=z='zoom+0.002':d=25*4 %~n1.mp4
 EXIT /B 0
 
 :FLAIR
