@@ -39,6 +39,7 @@ ECHO 15 - Split to Scenes
 ECHO 16 - Test LUTs on Video (from lut folder)
 ECHO 17 - Apply LUT to video
 ECHO 18 - Extract All Frames to PNG
+ECHO 19 - Burn Subtitles
 ECHO e - EXIT
 ECHO.
 SET /P M2=Type a number then press ENTER:
@@ -60,6 +61,7 @@ IF %M2%==15 CALL :SCENEDETECT %*
 IF %M2%==16 CALL :TESTLUT %*
 IF %M2%==17 CALL :APPLYLUT %*
 IF %M2%==18 CALL :EXTRACTPNG %*
+IF %M2%==19 CALL :SUBTITLEBURN %*
 IF %M2%==e GOTO EOF
 GOTO MENU
 
@@ -274,6 +276,11 @@ SET /P VHEIGHT=What Height?
 ffmpeg -hide_banner -i %* -vf scale=%VWIDTH%:-1:flags=lanczos, crop=%VWIDTH%:%VHEIGHT% out.jpg
 EXIT /B 0
 
+:SUBTITLEBURN
+SET /P SUBS=Enter subtitle name and extension (Press Enter):
+ffmpeg -hide_banner -i "%SUBS%" subtitle.ass
+ffmpeg -i %* -vf "ass=subtitle.ass" "%~n1_SUBS%~x1"
+EXIT /B 0
 
 :MP4SLIDESHOW
 ffmpeg -i %%* slideshow.mp4
