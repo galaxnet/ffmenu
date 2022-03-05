@@ -99,17 +99,20 @@ EXIT /B 0
 
 :PHOTOEDIT
 ECHO 1 - Preview LUTs on Photo
-ECHO 2 - Denoise Photo
-ECHO 3 - Add Grain to Photo
-ECHO 4 - Curves Presets (vintage, etc.)
+ECHO 2 - Denoise Photo (hqdn3d - fast)
+ECHO 3 - Supersample + Denoise (nlmeans - good)
+ECHO 4 - Add Grain to Photo
+ECHO 5 - Curves Presets (vintage, etc.)
+ECHO 6 - Scale + Crop (Landscape)
 ECHO.
 SET /P MP=Type a number then press ENTER:
 IF %MP%==1 CALL :TESTLUTPHOTO %*
 IF %MP%==2 CALL :PHOTODENOISE %*
-IF %MP%==3 CALL :PHOTOADDNOISE %*
-IF %MP%==4 CALL :PHOTOCURVES %*
+IF %MP%==3 CALL :PHOTODENOISESUPER %*
+IF %MP%==4 CALL :PHOTOADDNOISE %*
+IF %MP%==5 CALL :PHOTOCURVES %*
+IF %MP%==6 CALL :SCALECROPL %*
 EXIT /B 0
-
 
 :GIFMENU
 CALL :FLAIR
@@ -208,7 +211,6 @@ REM -- LUTs --
 :TESTLUT
 REM LUTs as .CUBES stored in LUT subdirectory
 mkdir out
-REM del "out\*.jpg"
 for %%f in (lut/*.CUBE) do (
 echo Processing %%~nf
 ffmpeg -ss 15 -v error -hide_banner -y -i %* -vf lut3d="lut/%%~nxf" -frames:v 1 "out/%%~nf_1.jpg"
@@ -252,6 +254,26 @@ REM Denoise photos with hqdn3d
 SET /P DEN=How much denoise?(1-200)
 ffmpeg -hide_banner -i %* -vf hqdn3d=%DEN% -q:v 1 "%~n1_DENOISE%~x1"
 EXIT /B 0
+
+:PHOTODENOISESUPER
+REM Denoise photos with hqdn3d
+SET /P WEIGHT=nlmeans weight?(1-30)
+SET /P SUPER=Supersample rate?(1 for none, 2, or 4)
+ffmpeg -hide_banner -i %* -vf scale=(iw*%SUPER%):(ih*%SUPER%) -q:v 1 "denoise1.png"
+ffmpeg -hide_banner -i "denoise1.png" -vf nlmeans=%WEIGHT%:51 -q:v 1 "denoise2.png"
+ffmpeg -hide_banner -i "denoise2.png" -vf scale=(iw/%SUPER%):(ih/%SUPER%) -q:v 1 "%~n1_DENOISE%~x1"
+del /q "denoise1.png"
+del /q "denoise2.png"
+EXIT /B 0
+
+:SCALECROPL
+REM Scale a landscape photo or video by width, the crop the height, all from center.
+CLS
+SET /P VWIDTH=What Width?
+SET /P VHEIGHT=What Height?
+ffmpeg -hide_banner -i %* -vf scale=%VWIDTH%:-1:flags=lanczos, crop=%VWIDTH%:%VHEIGHT% out.jpg
+EXIT /B 0
+
 
 :MP4SLIDESHOW
 ffmpeg -i %%* slideshow.mp4
