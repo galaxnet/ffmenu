@@ -103,19 +103,21 @@ EXIT /B 0
 
 :PHOTOEDIT
 ECHO 1 - Preview LUTs on Photo
-ECHO 2 - Denoise Photo (hqdn3d - fast)
-ECHO 3 - Supersample + Denoise (nlmeans - good)
-ECHO 4 - Add Grain to Photo
-ECHO 5 - Curves Presets (vintage, etc.)
-ECHO 6 - Scale + Crop (Landscape)
+ECHO 2 - Denoise Photo (hqdn3d - Fast)
+ECHO 3 - Supersample + Denoise (nlmeans - Good)
+ECHO 4 - Block Matching Denoise (bm3d - Best)
+ECHO 5 - Add Grain to Photo
+ECHO 6 - Curves Presets (vintage, etc.)
+ECHO 7 - Scale + Crop (Landscape)
 ECHO.
 SET /P MP=Type a number then press ENTER:
 IF %MP%==1 CALL :TESTLUTPHOTO %*
 IF %MP%==2 CALL :PHOTODENOISE %*
 IF %MP%==3 CALL :PHOTODENOISESUPER %*
-IF %MP%==4 CALL :PHOTOADDNOISE %*
-IF %MP%==5 CALL :PHOTOCURVES %*
-IF %MP%==6 CALL :SCALECROPL %*
+IF %MP%==3 CALL :PHOTODENOISEBM3D %*
+IF %MP%==5 CALL :PHOTOADDNOISE %*
+IF %MP%==6 CALL :PHOTOCURVES %*
+IF %MP%==7 CALL :SCALECROPL %*
 EXIT /B 0
 
 :GIFMENU
@@ -257,6 +259,11 @@ EXIT /B 0
 REM Denoise photos with hqdn3d
 SET /P DEN=How much denoise?(1-200)
 ffmpeg -hide_banner -i %* -vf hqdn3d=%DEN% -q:v 1 "%~n1_DENOISE%~x1"
+EXIT /B 0
+
+:PHOTODENOISEBM3D
+REM Denoise photos with bm3d, block matching
+ffmpeg -hide_banner -i %* -vf split[a][b],[a]nlmeans=s=3:r=7:p=3[a],[b][a]bm3d=sigma=3:block=4:bstep=2:group=16:estim=final:ref=1 -q:v 1 "%~n1_DENOISE%~x1"
 EXIT /B 0
 
 :PHOTODENOISESUPER
