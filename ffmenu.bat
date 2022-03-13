@@ -263,7 +263,8 @@ EXIT /B 0
 
 :PHOTODENOISEBM3D
 REM Denoise photos with bm3d, block matching
-ffmpeg -hide_banner -i %* -vf split[a][b],[a]nlmeans=s=3:r=7:p=3[a],[b][a]bm3d=sigma=3:block=4:bstep=2:group=16:estim=final:ref=1 -q:v 1 "%~n1_DENOISE%~x1"
+SET /P DEN=How much denoise?(1-999)
+ffmpeg -hide_banner -i %* -vf split[a][b],[a]nlmeans=s=3:r=7:p=3[a],[b][a]bm3d=sigma=%DEN%:block=4:bstep=2:group=16:estim=final:ref=1 -q:v 1 "%~n1_DENOISE%~x1"
 EXIT /B 0
 
 :PHOTODENOISESUPER
