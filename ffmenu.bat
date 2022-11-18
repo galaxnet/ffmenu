@@ -359,7 +359,7 @@ REM y0 appears to determine width of c0. y1 appears to be width of gradient effe
 ffmpeg -f lavfi -i "gradients=s=360x240: n=3: c0=darkblue: c1=darkorange: c2=darkorange: r=30: d=30: x0=0: x1=0: y0=50: y1=200: speed=0.00001" output.mp4
 ffmpeg -i output.mp4 -i music.mp3 -map 0:0 -map 1:a -c:v copy -shortest output2.mp4
 ffmpeg -i output2.mp4 -vf "drawbox=x=iw/10:y=ih/5:w=iw*0.8:h=ih*0.6:color=purple@0.5:t=fill" output3.mp4
-ffmpeg -i output3.mp4 -vf "drawtext=textfile=credits.txt: x=w/10: y=h-8*t: fontsize=12:fontcolor=yellow@0.9: box=1: boxcolor=darkblue@0.9" -c:a copy outputcredits.mp4
+ffmpeg -i output3.mp4 -vf drawtext=textfile=credits.txt: x=w/10: y=h-8*t: fontsize=12:fontcolor=yellow@0.9: box=1: boxcolor=darkblue@0.9" -c:a copy outputcredits.mp4
 EXIT /B 0
 
 :BUMPSCROLLER
